@@ -1,5 +1,6 @@
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -7,8 +8,7 @@ import org.testng.asserts.SoftAssert;
 
 import static com.codeborne.selenide.Condition.checked;
 import static com.codeborne.selenide.Selectors.byTagName;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 public class CheckboxTests extends ConfigTests  {
         SoftAssert softAssert = new SoftAssert();
@@ -19,38 +19,23 @@ public class CheckboxTests extends ConfigTests  {
         }
 
 
-        @Test(timeOut = 10000)
-        public void CheckBoxes()  {
-            open("/checkboxes");
-            SelenideElement form = $(byTagName("form"));
-            $(form).findAll("input").forEach(el->{
-                if(el.has(checked)){
-                    el.setSelected(false);
-                }
-                softAssert.assertFalse(el.is(Condition.checked));
-            });
-//            SelenideElement checkbox1 =  $("input[type=checkbox]",1);
-//            checkbox1.setSelected(false);
-//            softAssert.assertTrue(checkbox1.is(Condition.checked));
-//            SelenideElement checkbox2 =  $("input[type=checkbox]",0);
-//            checkbox2.setSelected(true);
-//            softAssert.assertFalse(checkbox2.is(Condition.checked));
-            softAssert.assertAll();
+//
 
-        }
-
-    @Test()
-    public void CheckUnCheckBoxes()  {
+    @Test(groups = {"FrontEnd"})
+    public void uncheck() {
         open("/checkboxes");
-        SelenideElement form = $(byTagName("form"));
-        $(form).findAll("input").forEach(el->{
-            if(!el.has(checked)){
-                el.setSelected(true);
-            }
-            softAssert.assertFalse(!el.is(Condition.checked));
-        });
+        ElementsCollection checkbox1 = $$("input[type=checkbox]");
+        checkbox1.forEach(el -> el.setSelected(false));
+        softAssert.assertTrue(checkbox1.get(0).is(Condition.checked));
+    }
+    @Test(groups = {"BackEnd"})
+    public void check() {
+        open("/checkboxes");
+        ElementsCollection checkbox2 =  $$("input[type=checkbox]");
+        checkbox2.forEach(el -> el.setSelected(true));
+        softAssert.assertFalse(checkbox2.get(1).is(Condition.checked));
         softAssert.assertAll();
     }
 
+}
 
-    }
